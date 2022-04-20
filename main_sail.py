@@ -14,8 +14,7 @@ class Background(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
-class Meilee (pygame.sprite.Sprite):
-    '''Just the name of the class of the main characer, Mei Lee. Thank Rainer for the confusion lol. This time its the class in main_sail'''
+class Obj(pygame.sprite.Sprite):
     def __init__(self, img_path):
         super().__init__()
         self.image = pygame.image.load(img_path)
@@ -25,7 +24,7 @@ class Meilee (pygame.sprite.Sprite):
 
 # Objects
 background = Background('sail_screen\sail.png')
-meiLee = Meilee('sail_screen\sail_back.png')
+meiLee = Obj('sail_screen\sail_back.png')
 
 # Groups 
 player_group = pygame.sprite.Group()
@@ -41,13 +40,17 @@ def close_screen():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-def main_sail(post_fight):
+def main_sail(post_fight, indic_start):
     mei_fight = 'sail_screen\sail_fight.png'
     mei_back = 'sail_screen\sail_back.png'
     mei_upgrade = 'sail_screen\sail_upgrade.png'
-    #background_group.draw(screen)
-    meiLee.update_img(mei_back)
-    indic_pos = 0
+    if indic_start == 0:
+        meiLee.update_img(mei_back)
+    elif indic_start == 1:
+        meiLee.update_img(mei_fight)
+    elif indic_start == 2:
+        meiLee.update_img(mei_upgrade)
+    indic_pos = indic_start
     choose = False
     i = 0
     while choose == False:

@@ -1,7 +1,7 @@
 # Imports
 import pygame, sys 
-import main_fight as fight
 import functs_anims as anim
+
 # Setup
 pygame.init()
 clock = pygame.time.Clock()
@@ -15,7 +15,7 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
 
-class Island(pygame.sprite.Sprite):
+class Obj(pygame.sprite.Sprite):
     def __init__(self, img_path):
         super().__init__()
         self.image = pygame.image.load(img_path)
@@ -24,23 +24,16 @@ class Island(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
 
-class PathIndic(pygame.sprite.Sprite):
-    def __init__(self, img_path):
-        super().__init__()
-        self.image = pygame.image.load(img_path)
-        self.rect = self.image.get_rect()
-    def update(self, img_path):
-        self.image = pygame.image.load(img_path)
-        self.rect = self.image.get_rect()
+bg_color = (177,218,235)
 
 # Objects
 bg_map = Background('map_screen\map.png')
-island_green = Island('map_screen\map_green.png')
-island_yellow = Island('map_screen\map_yellow_lock.png')
-island_purple = Island('map_screen\map_purple_lock.png')
-island_boss = Island('map_screen\map_boss_lock.png')
-path = PathIndic('map_screen\map_path_green.png')
-map_indic = PathIndic('map_screen\map_indic_green.png')
+island_green = Obj('map_screen\map_green.png')
+island_yellow = Obj('map_screen\map_yellow_lock.png')
+island_purple = Obj('map_screen\map_purple_lock.png')
+island_boss = Obj('map_screen\map_boss_lock.png')
+path = Obj('map_screen\map_path_green.png')
+map_indic = Obj('map_screen\map_indic_green.png')
 
 # Groups
 bg_group = pygame.sprite.Group()
@@ -69,7 +62,7 @@ def main_map(open_pos):
     if open_pos > 2:
         island_boss.update('map_screen\map_boss.png')
         path.update('map_screen\map_path_boss.png')
-    screen.fill((117,218,235))
+    screen.fill(bg_color)
     while choose == False:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -79,9 +72,11 @@ def main_map(open_pos):
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     if indic_pos > -1:
                         indic_pos -= 1
+                        screen.fill(bg_color)
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     if indic_pos < 3 and indic_pos < open_pos:
                         indic_pos += 1
+                        screen.fill(bg_color)
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     choose = True
                     if indic_pos > -1:

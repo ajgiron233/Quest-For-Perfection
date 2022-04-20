@@ -25,31 +25,20 @@ class Ui(pygame.sprite.Sprite):
     def update_img(self, img_path):
         self.image = pygame.image.load(img_path)
 class Player(pygame.sprite.Sprite):
-    def __init__(self, img_path):
+    def __init__(self, img_path, pos_x):
         super().__init__()
+        self.pos_x = pos_x
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
-    def update (self, pos_x, pos_y):
-        self.rect.center = (pos_x, pos_y)
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, img_path):
-        super().__init__()
-        self.image = pygame.image.load(img_path)
-        self.rect = self.image.get_rect()
-    def update (self, pos_x, pos_y):
-        self.rect.center = (pos_x, pos_y)
+    def update_y (self, pos_y):
+        self.rect.center = (self.pos_x, pos_y)
     def update_img(self, img_path):
-        self.image = pygame.image.load(img_path)
-        self.rect = self.image.get_rect()
-class BG(pygame.sprite.Sprite):
-    def __init__(self, img_path):
-        super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
 
 # Objects 
-player = Player('fight_screen\\player1.png')
-enemy = Enemy('fight_screen\\enemy1.png')
+player = Player('fight_screen\\player1.png', 120)
+enemy = Player('fight_screen\\enemy1.png', 620)
 buttonBG = Ui('fight_screen\\buttonBG_new.png')
 buttonIndic = Ui('fight_screen\\buttonIndic_Attack.png')
 buttonMenu = Ui('fight_screen\\buttonMenu.png')
@@ -60,9 +49,7 @@ background = Ui('fight_screen\\BG.png')
 # Groups 
 player_group = pygame.sprite.Group()
 player_group.add(player)
-
-enemy_group = pygame.sprite.Group()
-enemy_group.add(enemy)
+player_group.add(enemy)
 
 ui_group = pygame.sprite.Group()
 ui_group.add(buttonBG)
@@ -117,11 +104,8 @@ def choose_phase(start_fight, enemy_lvl):
         if indic_pos == 3:
             buttonIndic.update_img('fight_screen\\buttonIndic_Ult.png')
     
-    global indic_pos
     indic_pos = 0
-    global player_y
     player_y = 200
-    global turn
     menu = 1
     if p1_stats['ult'] > 0:
         ui_group.add(ultPoints)
@@ -140,8 +124,7 @@ def choose_phase(start_fight, enemy_lvl):
     if turn < 7 and p1_stats['ult'] > 0:
         img_path = f"fight_screen\\ult_{turn - 1}.png"
         ultPoints.update_img(img_path)
-        print("test for a loop 2")
-    if enemy_lvl == 3:
+    if enemy_lvl == 3 and start_fight == True:
         background.update_img('fight_screen\\BG.png')
     while True:
         for event in pygame.event.get():
@@ -189,12 +172,11 @@ def choose_phase(start_fight, enemy_lvl):
                                 player_y -= ((player_y - 200) * 0.03) / 0.5
                                 button_y -= (10 * t2) + (-15 * (t2 ** 2))
                                 background_group.draw(screen)
-                                player_group.update(120, player_y)
-                                enemy_group.update(620, player_y)
+                                player.update_y(player_y)
+                                enemy.update_y(player_y)
                                 ui_group.update(button_y)
                                 menu_type.update(button_y)
                                 player_group.draw(screen)
-                                enemy_group.draw(screen)
                                 ui_group.draw(screen)
                                 menu_type.draw(screen)
                                 if menu == 2 and p1_stats['poison'] == 0:
@@ -212,25 +194,23 @@ def choose_phase(start_fight, enemy_lvl):
         if enemy_lvl != 3 or i > 43:    
             player_y = 200 + (math.sin(t)) * 25
             player_group.draw(screen)
-            enemy_group.draw(screen)
             ui_group.draw(screen)
             writeText("FPS: " + str(int(clock.get_fps())), 60, 20, 15)
             if menu == 1:
                 ui_menu_group.draw(screen)
             else:
                 ui_ATKMenu_group.draw(screen)
-            player_group.update(120, player_y)
-            enemy_group.update(620, player_y)
+            player.update_y(player_y)
+            enemy.update_y(player_y)
             healthbar('all', '', 0)
         if i < 43:
             anim.open_screen(i)
             i += 1
         if i == 43 and enemy_lvl == 3:
+            player.update_y(200)
+            enemy.update_y(200)
             background_group.draw(screen)
-            player_group.update(120, 200)
-            enemy_group.update(620, 200)
             player_group.draw(screen)
-            enemy_group.draw(screen)
             pygame.display.flip()
             time.sleep(1)
             writeText("Wait a minute...", 400, 220, 18)
@@ -245,12 +225,12 @@ def choose_phase(start_fight, enemy_lvl):
             time.sleep(1)
             background_group.draw(screen)
             enemy.update_img('fight_screen\\enemyBoss_angry.png')
-            enemy_group.update(620, 200)
+            enemy.update_y(200)
             player_group.draw(screen)
-            enemy_group.draw(screen)
             background.update_img('fight_screen\\BG_health.png')
             pygame.display.flip()
             time.sleep(1)
+            t = 0
             i += 1
         if menu == 2 and p1_stats['poison'] == 0:
             pygame.draw.rect(screen,(217,217,217),(194,524,117,50))
@@ -265,7 +245,6 @@ def choose_phase(start_fight, enemy_lvl):
 def attack_phase(choice, enemy_lvl):
     global p_prot
     global e_prot
-    global turn
     if choice == -1: # QUIT
         return ('quit')
         
@@ -378,22 +357,21 @@ def healthbar(object, type, change):
             return 0
         else:
             return input
-    global p_health
+    global p_health # Is there a better way to do this than assign 6 global vars?
     global e_health
     global p_prot
-    global e_prot
     global e_prot
     global max_phealth
     global max_ehealth
     if object == "player": # Player Gets Hit/Healed
         if type == 'hit':
-            p_health -= (change)
+            p_health -= change
         elif type == 'heal':
             p_health += change
 
     elif object == "enemy": # Enemy Gets Hit/Healed
         if type == 'hit':
-            e_health -= (change)
+            e_health -= change
         elif type == 'heal':
             e_health += change
     green_print(p_health, max_phealth, e_health, max_ehealth)
@@ -443,7 +421,6 @@ def main_fight(enemy_lvl, import_stats):
     global p_prot
     global e_health
     global p_health
-    global p1_stats
     global turn
     global max_phealth
     global max_ehealth
@@ -529,3 +506,5 @@ def main_fight(enemy_lvl, import_stats):
                 t += 0.02
                 clock.tick(60)
                 pygame.display.update()
+
+#main_fight(3, p1_stats)

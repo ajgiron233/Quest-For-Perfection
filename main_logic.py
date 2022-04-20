@@ -7,10 +7,8 @@ import main_title as title
 import main_map as map
 import main_ug as ug
 
-
 # Initialize game stats
 p1_stats = ug.p1_stats
-
 
 # Main loop
 running = True
@@ -20,10 +18,12 @@ map_lvl = 0
 map_lvl_list.append(map_lvl)
 to_menu = False
 post_fight = False
+start_game = True
 while running:
     if to_menu == False:
         title.main_title()
-    x = sail.main_sail(post_fight)
+        x = 0
+    x = sail.main_sail(post_fight, x)
     post_fight = False
     if x == 1:
         enemy_choice = map.main_map(map_lvl)

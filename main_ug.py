@@ -1,6 +1,6 @@
 # Imports
 import pygame, sys, math
-import functs_anims as anim
+
 # Setup
 pygame.init()
 clock = pygame.time.Clock()
@@ -48,7 +48,7 @@ class Indic(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_path)
 
 # Objects
-background = Background('ug_screen\\ug.png')
+background = Background('ug_screen\\ug_2.png')
 back = Background('ug_screen\\ug_back.png')
 item_attack = Items('ug_screen\\ug_attack.png')
 item_heal = Items('ug_screen\\ug_heal.png')
@@ -76,12 +76,12 @@ indic_group.add(indic)
 
 # P1 stats are held here for all files
 p1_stats = {
-    'attk': 5,
+    'attk': 50,
     'heal': 1,
     'shield': 1,
-    'poison': 0,
+    'poison': 1,
     'fire': 0,
-    'ult': 0,
+    'ult': 1,
     'health': 20
 }
 
@@ -140,7 +140,6 @@ def ug_buy(indic_pos, ug_points, p1_stats):
                     waiting = False
         pygame.draw.rect(screen,(139,139,139),(150, 470, 305, 110))
         return 0
-    
     p1_stats[stat] += 1
     ug_points -= 1
     pygame.draw.rect(screen,(139,139,139),(150, 470, 305, 110))
@@ -176,9 +175,9 @@ def ug_choose(max_ug, ug_points):
         item_fire.update_img("ug_screen\\ug_fire.png")
     if max_ug > 4:
         item_ult.update_img("ug_screen\\ug_ult.png")
-    background.update('ug_screen\\ug.png')
+    background.update('ug_screen\\ug_2.png')
     background_group.draw(screen)
-    background.update('ug_screen\\ug_cover.png')
+    background.update('ug_screen\\ug_cover_2.png')
     indic.update_img('ug_screen\\ug_indic.png')
     first_arrow = False
     first_back = True
@@ -229,7 +228,7 @@ def ug_choose(max_ug, ug_points):
         indic_group.draw(screen)
         first = stat_defs(indic_pos, first)
         pygame.display.flip()
-        t += 0.3
+        t += 0.15
         clock.tick(60)
 def stat_defs(indic_pos, first):
     if first == True:

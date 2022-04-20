@@ -13,8 +13,7 @@ class Background(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
-class Meilee (pygame.sprite.Sprite):
-    '''Just the name of the class of the main characer, Mei Lee. Thank Rainer for the confusion lol'''
+class Obj(pygame.sprite.Sprite):
     def __init__(self, img_path, pos_x, pos_y):
         super().__init__()
         self.pos_x = pos_x
@@ -22,41 +21,23 @@ class Meilee (pygame.sprite.Sprite):
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
-    def update(self, pos_y):
+    def update_y(self, pos_y):
         self.rect.center = (self.pos_x, pos_y)
-class Button (pygame.sprite.Sprite):
-    def __init__(self, img_path, pos_x, pos_y):
-        super().__init__()
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.image = pygame.image.load(img_path)
-        self.rect = self.image.get_rect()
-        self.rect.center = [pos_x, pos_y]
-    def update(self, pos_y):
-        self.rect.center = [self.pos_x, pos_y]
-class InfoScreen (pygame.sprite.Sprite):
-    '''For the Options Screen in the Main Title'''
-    def __init__(self, img_path, pos_x, pos_y):
-        super().__init__()
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.image = pygame.image.load(img_path)
-        self.rect = self.image.get_rect()
-        self.rect.center = [pos_x, pos_y]
-    def update(self, pos_x):
+    def update_x(self, pos_x):
         self.rect.center = (pos_x, self.pos_y)
 
+
 # Objects
-background = Background('title_screen\\titleScreen.png')
-meiLee = Meilee('title_screen\\titleScreenSquare.png', 400, 300)
-buttonOption = Button('title_screen\\titleScreen_buttonOption.png', 400, 300)
-buttonPlay = Button('title_screen\\titleScreen_buttonPlay.png', 400, 300)
-buttonIndic = Button ('title_screen\\titleScreen_buttonPlay_Indic.png', 400, 300)
-options = InfoScreen('title_screen\\titleScreen_Options.png', 404, 300)
+background = Background('title_screen\\titleScreen_2.png')
+#meiLee = Obj('title_screen\\titleScreenSquare.png', 400, 300)
+buttonOption = Obj('title_screen\\titleScreen_buttonOption.png', 400, 300)
+buttonPlay = Obj('title_screen\\titleScreen_buttonPlay.png', 400, 300)
+buttonIndic = Obj ('title_screen\\titleScreen_buttonPlay_Indic.png', 400, 300)
+options = Obj('title_screen\\titleScreen_Options.png', 404, 300)
 
 # Groups 
 player_group = pygame.sprite.Group()
-player_group.add(meiLee)
+#player_group.add(meiLee)
 
 button_group = pygame.sprite.Group()
 button_group.add(buttonIndic)
@@ -82,18 +63,6 @@ def main_title():
     choose = False
     background_group.draw(screen)
     pygame.display.flip()
-    time.sleep(1)
-    t = 0
-    player_y = -300 
-    while player_y < 299.99:
-        close_screen()
-        player_y += 2 ** t
-        player_group.update(player_y)
-        background_group.draw(screen)
-        player_group.draw(screen)
-        pygame.display.flip()
-        clock.tick(60)
-        t += 0.1
     while choose == False:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -114,9 +83,8 @@ def main_title():
                         while screen_x < 390:
                             close_screen()
                             screen_x -= ((screen_x - 400) * 0.03) / 0.18
-                            screen_group.update(screen_x)
+                            options.update_x(screen_x)
                             background_group.draw(screen)
-                            player_group.draw(screen)
                             button_group.draw(screen)
                             screen_group.draw(screen)
                             pygame.display.flip()
@@ -132,9 +100,8 @@ def main_title():
                                         while screen_x > -50:
                                             close_screen()
                                             screen_x -= ((screen_x + 400) * 0.03) / 0.5
-                                            screen_group.update(screen_x)
+                                            options.update_x(screen_x)
                                             background_group.draw(screen)
-                                            player_group.draw(screen)
                                             button_group.draw(screen)
                                             screen_group.draw(screen)
                                             pygame.display.flip()
@@ -145,7 +112,6 @@ def main_title():
                         return
 
         background_group.draw(screen)
-        player_group.draw(screen)
         button_group.draw(screen)
 
         pygame.display.flip()
