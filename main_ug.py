@@ -76,12 +76,12 @@ indic_group.add(indic)
 
 # P1 stats are held here for all files
 p1_stats = {
-    'attk': 50,
+    'attk': 5,
     'heal': 1,
     'shield': 1,
-    'poison': 1,
+    'poison': 0,
     'fire': 0,
-    'ult': 1,
+    'ult': 0,
     'health': 20
 }
 
