@@ -243,6 +243,7 @@ def choose_phase(start_fight, enemy_lvl):
 def attack_phase(choice, enemy_lvl):
     global p_prot
     global e_prot
+    global turn
     if choice == -1: # QUIT
         return ('quit')
         
@@ -270,6 +271,7 @@ def attack_phase(choice, enemy_lvl):
             pygame.display.flip()
             time.sleep(1)
             attack_phase(choose_phase(False, enemy_lvl), enemy_lvl)
+        turn = 0
         writeText("ULT COMPLETE", 400, 400, 20)
         pygame.display.flip()
         time.sleep(1)
