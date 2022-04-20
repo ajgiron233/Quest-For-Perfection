@@ -235,8 +235,6 @@ def choose_phase(start_fight, enemy_lvl):
         if menu == 2 and p1_stats['poison'] == 0:
             pygame.draw.rect(screen,(217,217,217),(194,524,117,50))
         if start_fight == True and t < 0.07 and enemy_lvl != 3:
-            print("made it", end=' | ')
-            print (enemy_lvl)
             background.update_img('fight_screen\\BG_health.png')
         pygame.display.flip()
         clock.tick(60)
@@ -498,7 +496,7 @@ def main_fight(enemy_lvl, import_stats):
                             return(enemy_lvl)
                 if (t % 1) < 0.06:
                     screen.fill((155,155,155))
-                    writeText("ENEMY DEFEATED!", 400, 250, 20)
+                    writeText("ENEMY DEFEATED!", 400, 250, 30)
                     printed = False
                 elif (t % 1) < 0.52 and (t % 1) > 0.48 and printed == False:
                     writeText("Press [UP] or [w] to continue", 400, 350, 15)
