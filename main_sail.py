@@ -14,6 +14,8 @@ class Background(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
+    def update_y(self, y_pos):
+        self.rect = (0, y_pos)
 class Obj(pygame.sprite.Sprite):
     def __init__(self, img_path):
         super().__init__()
@@ -23,8 +25,10 @@ class Obj(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_path)
 
 # Objects
-background = Background('sail_screen\sail.png')
-meiLee = Obj('sail_screen\sail_back.png')
+gg_screen = Background('sail_screen\\sail_gg.png')
+background = Background('sail_screen\\sail.png')
+meiLee = Obj('sail_screen\\sail_back.png')
+gg_screen.update_y(-500)
 
 # Groups 
 player_group = pygame.sprite.Group()
@@ -32,19 +36,15 @@ player_group.add(meiLee)
 
 background_group = pygame.sprite.Group()
 background_group.add(background)
+background_group.add(gg_screen)
 
 
 #Functions 
-def close_screen():
-    for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-def main_sail(post_fight, indic_start):
-    mei_fight = 'sail_screen\sail_fight.png'
-    mei_back = 'sail_screen\sail_back.png'
-    mei_upgrade = 'sail_screen\sail_upgrade.png'
-    if indic_start == 0:
+def main_sail(post_fight, indic_start, gg_screen_check):
+    mei_fight = 'sail_screen\\sail_fight.png'
+    mei_back = 'sail_screen\\sail_back.png'
+    mei_upgrade = 'sail_screen\\sail_upgrade.png'
+    if indic_start == 0: # Where to start the indicator vvv
         meiLee.update_img(mei_back)
     elif indic_start == 1:
         meiLee.update_img(mei_fight)
@@ -53,7 +53,7 @@ def main_sail(post_fight, indic_start):
     indic_pos = indic_start
     choose = False
     i = 0
-    while choose == False:
+    while choose == False: # Main choice loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -77,8 +77,29 @@ def main_sail(post_fight, indic_start):
                     return indic_pos
         background_group.draw(screen)
         player_group.draw(screen)
-        if (post_fight == True) and (i < 43):
-            anim.open_screen(i)
+        if (post_fight == True) and (i < 43): # Open screen animation from returning from a fight
+            anim.open_screen(i) 
         i += 1
         pygame.display.flip()
         clock.tick(60)
+        if gg_screen_check == True and i == 43: # GG screen loop and display
+            done1 = False
+            done2 = False
+            gg_screen.update_y(0)
+            t = 0
+            while done2 ==False:
+                for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_UP or event.key == pygame.K_w:
+                                done1 = True 
+                background_group.draw(screen)
+                pygame.display.flip()
+                clock.tick(60)
+                if done1 == True:
+                    gg_screen.update_y(-1 * (t ** 2))
+                    t += 0.5
+                if t == 25:
+                    done2 = True

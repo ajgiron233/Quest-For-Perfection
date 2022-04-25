@@ -74,7 +74,7 @@ item_group.add(item_ult)
 indic_group = pygame.sprite.Group()
 indic_group.add(indic)
 
-# P1 stats are held here for all files
+# P1 stats are held here for all other code files. This is the list that gets updated when a player upgrades
 p1_stats = {
     'attk': 5,
     'heal': 1,
@@ -94,20 +94,14 @@ fire_clr = (213, 151, 85)
 ult_clr = (185, 190, 110)
 
 # Functions
-def writeText(string, coordx, coordy, fontSize, color):
-                #set the font to write with
+def writeText(string, coordx, coordy, fontSize, color): # Displaying text on screen. Credit to Thomas Garcia on codeinfopark.help for help with this one!
         font = pygame.font.Font('freesansbold.ttf', fontSize) 
-                #(0, 0, 0) is black, to make black text
         text = font.render(string, True, color)
-                #get the rect of the text
         textRect = text.get_rect()
-                #set the position of the text
         textRect = (coordx, coordy)
-                #add text to window
         screen.blit(text, textRect)
-                #update window
         pygame.display.update()
-def ug_buy(indic_pos, ug_points, p1_stats):
+def ug_buy(indic_pos, ug_points, p1_stats): # Actuially changing stats and displaying purchases in the left box
     if indic_pos == 0 and ug_points > 0: # UPGRADE ATTACK
         stat = 'attk'
         text = f"Attack now {p1_stats['attk'] + 1}!"
@@ -126,7 +120,7 @@ def ug_buy(indic_pos, ug_points, p1_stats):
     elif indic_pos == 5 and ug_points > 0: # UPGRADE Ult
         stat = 'ult'
         text = f"Ultimate now at level {p1_stats['ult'] + 1}!"
-    elif ug_points == 0:
+    elif ug_points == 0: # No points left :(
         pygame.draw.rect(screen,(139,139,139),(150, 470, 305, 110))
         writeText("You have no more upgrade points.", 159, 479, 17, black)
         writeText("[Press any key to continue]", 169, 541, 20, black)
@@ -143,9 +137,9 @@ def ug_buy(indic_pos, ug_points, p1_stats):
     p1_stats[stat] += 1
     ug_points -= 1
     pygame.draw.rect(screen,(139,139,139),(150, 470, 305, 110))
-    writeText(text, 159, 479, 20, black)
+    writeText(text, 159, 479, 20, black) # Variable "text" changes based on what the player's choice was. It is always displayed in the same spot.
     writeText("[Press any key to continue]", 169, 541, 20, black)
-    while True:
+    while True: # "Press any key to continue" waiting loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -153,7 +147,7 @@ def ug_buy(indic_pos, ug_points, p1_stats):
             if event.type == pygame.KEYDOWN:
                 pygame.draw.rect(screen,(139,139,139),(150, 470, 305, 110))
                 return ug_points
-def print_stats(p1_stats, ug_points, max_ug):
+def print_stats(p1_stats, ug_points, max_ug): # print the stats in the right box
     pygame.draw.rect(screen,(60,99,115),(480, 470, 305, 110))
     writeText(f"Attack: {p1_stats['attk']}", 489, 479, 18, attack_clr)
     writeText(f"Heal: {p1_stats['heal']}", 489, 505, 18, heal_clr)
@@ -165,11 +159,11 @@ def print_stats(p1_stats, ug_points, max_ug):
         writeText(f"Fire: {p1_stats['fire']}", 639, 505, 18, fire_clr)
     if max_ug > 4:
         writeText(f"Ultimate: {p1_stats['ult']}", 639, 531, 18, ult_clr)
-def ug_choose(max_ug, ug_points):
+def ug_choose(max_ug, ug_points): 
     indic_pos = 0
     indic.reset()
     t = 0
-    if max_ug > 2:
+    if max_ug > 2: # If the ability is unlocked, change lock icon to ability icon vvv
         item_poison.update_img("ug_screen\\ug_poison.png")
     if max_ug > 3:
         item_fire.update_img("ug_screen\\ug_fire.png")
@@ -177,9 +171,12 @@ def ug_choose(max_ug, ug_points):
         item_ult.update_img("ug_screen\\ug_ult.png")
     background.update('ug_screen\\ug_2.png')
     background_group.draw(screen)
-    background.update('ug_screen\\ug_cover_2.png')
+    background.update('ug_screen\\ug_cover_2.png') 
+    '''I used a cover (half the BG) so I wouldnt have to continuously update the print_stats function, only when the player stats changes. I found that 
+    printing text on top of itself without re-displaying the BG ontop of it makes the text get darker over time, so now I only have to change 
+    the text when it is needed.'''
     indic.update_img('ug_screen\\ug_indic.png')
-    first_arrow = False
+    first_arrow = False 
     first_back = True
     global first
     first = True
@@ -195,7 +192,7 @@ def ug_choose(max_ug, ug_points):
                         indic_pos -= 1
                         first = True
                         if indic_pos > -1:
-                            if indic_pos % 2 == 0:
+                            if indic_pos % 2 == 0: # Fun little trick to find where the indicator is (pillars alternate high, low, high, low, so it can be followed by a %2 path)
                                 indic.update(-125, 50)
                             if indic_pos % 2 == 1:
                                 indic.update(-125, -50)
@@ -213,7 +210,7 @@ def ug_choose(max_ug, ug_points):
                         return ug_points
                     ug_points = ug_buy(indic_pos, ug_points, p1_stats)
                     print_stats(p1_stats, ug_points, max_ug)
-        if indic_pos == -1 and first_back == True:
+        if indic_pos == -1 and first_back == True: # Again, I only update the arrow and back indicator when it changes, otherwise the arrow you see is the first one that was displayed. vv
             indic.update_img('ug_screen\\ug_back_indic.png')
             first_back == False
             first_arrow = True
@@ -230,7 +227,7 @@ def ug_choose(max_ug, ug_points):
         pygame.display.flip()
         t += 0.15
         clock.tick(60)
-def stat_defs(indic_pos, first):
+def stat_defs(indic_pos, first): # The text definitions for the abilities
     if first == True:
         text3 = ''
         text4 = ''

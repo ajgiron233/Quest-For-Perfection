@@ -24,7 +24,7 @@ class Obj(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_path)
         self.rect = self.image.get_rect()
 
-bg_color = (177,218,235)
+bg_color = (177,218,235) # so I can easily come back and switch what the BG color is
 
 # Objects
 bg_map = Background('map_screen\map.png')
@@ -53,7 +53,7 @@ path_indic_group.add(path)
 def main_map(open_pos):
     choose = False
     indic_pos = 0
-    if open_pos > 0:
+    if open_pos > 0: # Check and updade the map based on what islands are unlocked vvv
         island_yellow.update('map_screen\map_yellow.png')
         path.update('map_screen\map_path_yellow.png')
     if open_pos > 1:
@@ -63,7 +63,7 @@ def main_map(open_pos):
         island_boss.update('map_screen\map_boss.png')
         path.update('map_screen\map_path_boss.png')
     screen.fill(bg_color)
-    while choose == False:
+    while choose == False: # Main choose loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -82,7 +82,7 @@ def main_map(open_pos):
                     if indic_pos > -1:
                         anim.close_screen()
                     return indic_pos
-        if indic_pos == -1:
+        if indic_pos == -1: # Moving the indicator vvv
             map_indic.update('map_screen\map_indic_start.png')
         if indic_pos == 0:
             map_indic.update('map_screen\map_indic_green.png')
