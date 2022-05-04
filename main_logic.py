@@ -50,8 +50,7 @@ while running:
             map_lvl_list.append(2)
         if lvl_clear > 1:
             map_lvl_list.append(3)
-        map_lvl_list = [max(map_lvl_list)]
-        map_lvl = map_lvl_list[0]
+        map_lvl = max(map_lvl_list)
         ug_points += lvl_clear + 1
         to_menu = True
         post_fight = True

@@ -197,11 +197,11 @@ def choose_phase(start_fight, enemy_lvl):
         if enemy_lvl != 3 or i > 43: # If we aren't in the scene transition or boss cutscene vvv
             player_y = 200 + (math.sin(t)) * 25
             player_group.draw(screen)
-            ui_group.draw(screen)
+            ui_group.draw(screen) # ButtonBG, ult points, indic
             if menu == 1:
-                ui_menu_group.draw(screen)
+                ui_menu_group.draw(screen) # Buttons
             else:
-                ui_ATKMenu_group.draw(screen)
+                ui_ATKMenu_group.draw(screen) # Buttons
             player.update_y(player_y)
             enemy.update_y(player_y)
             healthbar('all', '', 0)
@@ -341,7 +341,7 @@ def ai_action(enemy_lvl): # Enemy is just on a RNG to attack. I would love to ma
         time.sleep(1.2)
 
 def healthbar(object, type, change): # Function that actually changes the player and enemy health and displays it in color and number
-    def green_print(p_health, max_phealth, e_health, max_ehealth): # Get RGB value for green in health bars based off of health remaining and mac health
+    def green_print(p_health, max_phealth, e_health, max_ehealth): # Get RGB value for green in health bars based off of health remaining and max health
         green = int((255 * p_health) / max_phealth) # A simple equivelant fractions mapping equation to convert amount of health lost relative to max health to green value in an RGB value
         egreen = int((255 * e_health) / max_ehealth)
         if green < 0:
@@ -511,3 +511,5 @@ def main_fight(enemy_lvl, import_stats):
                 t += 0.02
                 clock.tick(60)
                 pygame.display.update()
+
+#main_fight(3, p1_stats)

@@ -49,7 +49,7 @@ class Indic(pygame.sprite.Sprite):
 
 # Objects
 background = Background('ug_screen\\ug_2.png')
-back = Background('ug_screen\\ug_back.png')
+back = Background('ug_screen\\ug_back_2.png')
 item_attack = Items('ug_screen\\ug_attack.png')
 item_heal = Items('ug_screen\\ug_heal.png')
 item_shield = Items('ug_screen\\ug_shield.png')
@@ -78,20 +78,20 @@ indic_group.add(indic)
 p1_stats = {
     'attk': 5,
     'heal': 1,
-    'shield': 1,
+    'shield': 100,
     'poison': 0,
     'fire': 0,
-    'ult': 0,
+    'ult': 1,
     'health': 20
 }
-
+change = 0
 black = (0, 0, 0)
-attack_clr = (212, 119, 119)
-heal_clr = (55, 231, 134)
-shield_clr = (193, 150, 235)
-poison_clr = (184, 236, 110)
-fire_clr = (213, 151, 85)
-ult_clr = (185, 190, 110)
+attack_clr = (224, 46, 46)
+heal_clr = (168, 249, 96)
+shield_clr = (112, 82, 240)
+poison_clr = (141, 215, 74)
+fire_clr = (255, 188, 45)
+ult_clr = (238, 255, 45)
 
 # Functions
 def writeText(string, coordx, coordy, fontSize, color): # Displaying text on screen. Credit to Thomas Garcia on codeinfopark.help for help with this one!
@@ -101,7 +101,7 @@ def writeText(string, coordx, coordy, fontSize, color): # Displaying text on scr
         textRect = (coordx, coordy)
         screen.blit(text, textRect)
         pygame.display.update()
-def ug_buy(indic_pos, ug_points, p1_stats): # Actuially changing stats and displaying purchases in the left box
+def ug_buy(indic_pos, ug_points, p1_stats): # Actually changing stats and displaying purchases in the left box
     if indic_pos == 0 and ug_points > 0: # UPGRADE ATTACK
         stat = 'attk'
         text = f"Attack now {p1_stats['attk'] + 1}!"
@@ -148,7 +148,7 @@ def ug_buy(indic_pos, ug_points, p1_stats): # Actuially changing stats and displ
                 pygame.draw.rect(screen,(139,139,139),(150, 470, 305, 110))
                 return ug_points
 def print_stats(p1_stats, ug_points, max_ug): # print the stats in the right box
-    pygame.draw.rect(screen,(60,99,115),(480, 470, 305, 110))
+    pygame.draw.rect(screen,(192,136,94),(480, 470, 305, 110))
     writeText(f"Attack: {p1_stats['attk']}", 489, 479, 18, attack_clr)
     writeText(f"Heal: {p1_stats['heal']}", 489, 505, 18, heal_clr)
     writeText(f"Shield: {p1_stats['shield']}", 489, 531, 18, shield_clr)
@@ -273,3 +273,4 @@ def stat_defs(indic_pos, first): # The text definitions for the abilities
         writeText(text4, 154, 534, 16, black)
         writeText(text5, 154, 554, 16, black)
         return False
+ug_choose(5,2)
